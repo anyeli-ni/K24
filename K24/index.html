@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10152f">
+  <title>Una sorpresa de cumpleaños</title>
+  <style>
+    :root { color-scheme:dark; --ink:#fff8e9; --gold:#ffd36b; --pink:#ff8eae; }
+    * { box-sizing:border-box }
+    body { margin:0; min-height:100vh; overflow-x:hidden; color:var(--ink); font-family:system-ui,-apple-system,"Segoe UI",sans-serif; background:#050509; transition:background-color 1s,color 1s; }
+    body.lights-on { color:#46354e; background-color:#17152f; background-image:url("assets/81db4998-a0b0-4de2-b821-03d702ead9ee.png"); background-position:center; background-size:cover; background-attachment:fixed; }
+    main { position:relative; z-index:1; min-height:100vh; display:grid; place-items:center; padding:30px 18px 80px; text-align:center; }
+    .room { width:min(100%,680px); }
+    .decoration { position:fixed; z-index:0; visibility:hidden; opacity:0; pointer-events:none; user-select:none; transition:opacity 1s; }
+    .lights-on .decoration { visibility:hidden; opacity:0; }
+    .balloon { top:18%; width:clamp(95px,20vw,190px); animation:float 4s ease-in-out infinite; }
+    .balloon.left { left:1%; }.balloon.right { right:1%; animation-delay:-2s; }
+    .flag { top:0; width:min(34vw,270px); }.flag.left { left:0; }.flag.right { right:0; transform:scaleX(-1); }
+    .intro { min-height:2em; margin:0 0 22px; color:#c9c9e6; font-size:clamp(1.1rem,4vw,1.55rem); line-height:1.7; opacity:0; transition:opacity .6s; }
+    .intro.show { opacity:1; }
+    .lights-on .intro { color:#795d80; }
+    h1 { margin:8px 0 18px; color:var(--gold); font-size:clamp(2.5rem,10vw,5.2rem); line-height:1; text-shadow:0 5px 30px #ffc85b55; visibility:hidden; opacity:0; transition:opacity .8s; }
+    .lights-on.show-letter h1 { visibility:visible; opacity:1; }
+    .lights-on h1 { color:#bc5d7c; }
+    .lamp { display:block; width:clamp(100px,24vw,150px); height:clamp(100px,24vw,150px); margin:12px auto 4px; padding:12px; border:0; border-radius:50%; background:transparent; cursor:pointer; filter:drop-shadow(0 0 24px #ffe39a99); animation:swing 3s ease-in-out infinite alternate; transform-origin:top center; }
+    .lamp img { display:block; width:100%; height:100%; object-fit:contain; }
+    .lamp:hover { filter:drop-shadow(0 0 38px #ffe39aff); }
+    [hidden] { display:none!important; }
+    @keyframes appear { from { opacity:0 } to { opacity:1 } }
+    @keyframes swing { to { transform:rotate(5deg) } }
+    .card { position:relative; overflow:hidden; margin:22px auto; padding:clamp(22px,6vw,38px); max-width:540px; border:1px solid #ffffff45; border-radius:28px; background:#ffffff0b; box-shadow:0 18px 60px #05081955; backdrop-filter:blur(8px); opacity:0; transform:translateY(14px) scale(.98); transition:opacity .8s,transform .8s,background .8s; }
+    .lights-on .card { background:#fff9f0d9; border-color:#fff; box-shadow:0 18px 60px #75547a24; }
+    .card-confetti { position:absolute; inset:-16%; width:132%; height:132%; object-fit:contain; opacity:.45; pointer-events:none; }
+    .card-content { position:relative; z-index:1; }
+    .card.show { opacity:1; transform:translateY(0) scale(1); }
+    .cake-wrap { position:relative; width:clamp(100px,32vw,165px); height:clamp(100px,32vw,165px); margin:0 auto; animation:float 2.5s ease-in-out infinite; }
+    .cake { display:block; width:100%; height:100%; object-fit:contain; }
+    .party-hat { position:absolute; top:-17%; left:55%; width:38%; height:44%; object-fit:contain; transform:rotate(15deg); }
+    @keyframes float { 50% { transform:translateY(-7px) } }
+    .recipient { margin:14px 0; color:var(--pink); font-size:clamp(1.7rem,7vw,2.7rem); font-weight:850; }
+    .lights-on .recipient { color:#b85076; }
+    .message { margin:10px auto 0; max-width:410px; font-size:1.08rem; line-height:1.8; }
+    .signature { margin:22px 0 0; color:#ffcf7b; font-style:italic; }
+    .lights-on .signature { color:#94659a; }
+    .lights-on .intro { width:fit-content; max-width:min(92%,520px); margin:0 auto 16px; padding:13px 20px; border:2px solid #fff; border-radius:24px; color:#694e70; background:#fff8f0ed; box-shadow:0 8px 25px #35224244; }
+    .envelope-button { display:block; margin:8px auto 14px; padding:0!important; border:0!important; border-radius:22px!important; background:transparent!important; box-shadow:0 12px 32px #27133788; animation:appear .8s ease both; }
+    .envelope-button img { display:block; width:min(410px,82vw); height:auto; border-radius:22px; }
+    .envelope-button:hover { transform:translateY(-5px) scale(1.02)!important; }
+    .lights-on.show-letter .envelope-button { display:none!important; }
+    .actions { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-top:25px; }
+    .button-icon { width:22px; height:22px; vertical-align:middle; object-fit:contain; }
+    button:not(.lamp) { padding:13px 20px; border:1px solid #ffffff50; border-radius:999px; color:#fff; background:#ffffff15; font:inherit; font-weight:750; cursor:pointer; transition:transform .15s,background .2s; }
+    button:not(.lamp):hover { transform:translateY(-2px); background:#ffffff28; }
+    button:focus-visible { outline:3px solid var(--gold); outline-offset:4px; }
+    .primary { border:0; color:#49374f; background:linear-gradient(135deg,#ffe08a,#ff9db8); box-shadow:0 8px 25px #ff9db833; }
+    .primary:hover { background:linear-gradient(135deg,#ffe9ab,#ffb2c8); }
+    .hint { margin:17px 0 0; color:#c3c0dc; font-size:.9rem; }
+    .lights-on .hint { color:#806d87; }
+    .confetti { position:fixed; z-index:2; top:-24px; pointer-events:none; animation:fall linear forwards; }
+    @keyframes fall { to { transform:translateY(110vh) rotate(720deg); opacity:.85 } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; scroll-behavior:auto!important; transition-duration:.01ms!important } }
+    @media (max-width:600px) { .balloon { top:8%; width:clamp(70px,19vw,115px); opacity:.78; } .flag { width:38vw; } }
+  </style>
+</head>
+<body>
+  <img class="decoration flag left" src="assets/flag-left.png" alt="" aria-hidden="true">
+  <img class="decoration flag right" src="assets/flag-right.png" alt="" aria-hidden="true">
+  <img class="decoration balloon left" src="assets/balloon-left.png" alt="" aria-hidden="true">
+  <img class="decoration balloon right" src="assets/balloon-right.png" alt="" aria-hidden="true">
+  <main>
+    <section class="room" aria-live="polite">
+      <p class="intro" id="intro" aria-live="polite"></p>
+      <button class="lamp" id="lights" type="button" aria-label="Prender la luz" hidden><img src="assets/bulb.svg" alt="Foquito"></button>
+      <button class="envelope-button" id="envelope" type="button" aria-label="Abrir el sobre" hidden><img src="assets/sobre-magico.png" alt="Sobre mágico rosa; toca para abrirlo"></button>
+      <h1>¡Feliz cumpleaños!</h1>
+      <article class="card" id="card">
+        <img class="card-confetti" src="assets/confetti.svg" alt="" aria-hidden="true">
+        <div class="card-content">
+          <div class="cake-wrap"><img class="cake" src="assets/cake.svg" alt="Pastel de cumpleaños"><img class="party-hat" src="assets/bday-cap.svg" alt=""></div>
+          <div class="recipient" id="recipient">¡Feliz cumpleaños, Kamila!</div>
+          <p class="message">Espero que hoy esté lleno de sonrisas, abrazos y momentos tan bonitos como tú. Que todos tus sueños se hagan realidad. ¡Te quiero mucho! ✨</p>
+          <p class="signature">Con cariño, Traposito 💛</p>
+        </div>
+      </article>
+      <div class="actions">
+        <button id="party" type="button" hidden><img class="button-icon" src="assets/gift.svg" alt=""> ¡Que empiece la fiesta!</button>
+      </div>
+      <p class="hint" id="hint" hidden>Haz clic en el foquito para prenderla.</p>
+    </section>
+  </main>
+  <script src="js/app.js" defer></script>
+</body>
+</html>

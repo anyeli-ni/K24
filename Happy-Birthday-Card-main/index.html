@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff4ec">
+  <title>Una sorpresa para ti 🎂</title>
+  <style>
+    :root { --ink:#503d57; --pink:#e87591; --cream:#fffaf3; }
+    * { box-sizing:border-box }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; padding:24px; color:var(--ink); font-family:system-ui,-apple-system,"Segoe UI",sans-serif; background:radial-gradient(ellipse at 12% 12%,#ffe0e8,transparent 32%),radial-gradient(ellipse at 88% 88%,#d9f2e8,transparent 30%),#fff4ec; }
+    main { width:min(100%,560px); text-align:center; }
+    .eyebrow { color:#a16e91; font-size:.76rem; font-weight:800; letter-spacing:.2em; text-transform:uppercase; }
+    h1 { margin:12px 0 24px; color:#78517a; font-size:clamp(2.4rem,9vw,4.5rem); line-height:1.02; }
+    .card { position:relative; overflow:hidden; padding:34px 26px; border:2px solid white; border-radius:28px; background:var(--cream); box-shadow:0 22px 55px #74506724,inset 0 0 0 1px #f2d8d6; transition:transform .5s,background .5s; }
+    .card::before,.card::after { position:absolute; color:#efbf5d; font-size:27px; content:"✦"; opacity:.8; }
+    .card::before { top:14px; left:18px }.card::after { right:18px; bottom:14px }
+    .card.open { transform:rotate(-1deg) scale(1.015); background:#fffdf8; }
+    .cake { margin:4px 0 8px; font-size:76px; animation:bob 2s ease-in-out infinite; }
+    @keyframes bob { 50% { transform:translateY(-5px) } }
+    .name { margin:8px 0; color:#bd6680; font-size:1.2rem; font-weight:800; }
+    .message { max-width:390px; margin:16px auto; font-size:1.08rem; line-height:1.75; }
+    .sign { margin-top:22px; color:#966e91; font-style:italic; }
+    button { margin-top:22px; padding:14px 23px; border:0; border-radius:999px; color:white; background:linear-gradient(135deg,#ed7593,#bf78a7); box-shadow:0 7px 18px #c36e8c45; font:inherit; font-weight:800; cursor:pointer; transition:transform .15s; }
+    button:hover { transform:translateY(-2px) } button:active { transform:scale(.97) }
+    button:focus-visible { outline:3px solid #68486b; outline-offset:4px }
+    .wish { min-height:1.6em; margin:14px 0 0; color:#a15f7e; font-weight:800; }
+    .hint { margin:8px 0 0; color:#987e93; font-size:.87rem; }
+    .confetti { position:fixed; z-index:3; top:-20px; pointer-events:none; animation:fall linear forwards; }
+    @keyframes fall { to { transform:translateY(110vh) rotate(720deg); opacity:.8 } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; scroll-behavior:auto!important; transition-duration:.01ms!important } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">Hoy es un día especial</div>
+    <h1>¡Feliz cumpleaños!</h1>
+    <section class="card" id="card" aria-label="Carta de cumpleaños">
+      <div class="cake" aria-hidden="true">🎂</div>
+      <div class="name">Para alguien increíble</div>
+      <p class="message">Que este nuevo año te traiga momentos preciosos, muchas risas y un montón de razones para celebrar. ¡Te mereces todo lo bonito!</p>
+      <div class="sign">Con mucho cariño 💛</div>
+    </section>
+    <button id="surprise" type="button">Abrir mi sorpresa ✨</button>
+    <div class="wish" id="wish" aria-live="polite"></div>
+    <p class="hint">Toca el botón y pide un deseo 🎈</p>
+  </main>
+  <script>
+    const button = document.querySelector('#surprise');
+    const card = document.querySelector('#card');
+    const wish = document.querySelector('#wish');
+    const colors = ['#f27f9a','#ffc85b','#8dcdbb','#b48bd0','#ff9e71'];
+    button.addEventListener('click', () => {
+      card.classList.add('open');
+      button.textContent = '¡Otra lluvia de festejo! 🎉';
+      wish.textContent = '¡Que se cumpla ese deseo! 🌟';
+      for (let i = 0; i < 65; i++) {
+        const bit = document.createElement('span');
+        bit.className = 'confetti';
+        bit.textContent = Math.random() > .5 ? '✦' : '●';
+        bit.style.left = Math.random() * 100 + 'vw';
+        bit.style.color = colors[Math.floor(Math.random() * colors.length)];
+        bit.style.fontSize = (8 + Math.random() * 13) + 'px';
+        bit.style.animationDuration = (2 + Math.random() * 2.5) + 's';
+        document.body.append(bit);
+        bit.addEventListener('animationend', () => bit.remove(), { once:true });
+      }
+    });
+  </script>
+</body>
+</html>
