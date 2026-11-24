@@ -171,6 +171,7 @@ $('#flowers-button').addEventListener('click',()=>{
     }
     return o;
   }
+  
   let svg='<svg viewBox="0 0 736 760" role="img" aria-label="Ramo de lirios azules con nube"><defs>'
    +'<linearGradient id="lp" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#6aa0ea"/><stop offset=".45" stop-color="#4a86dc"/><stop offset="1" stop-color="#8dbcf7"/></linearGradient>'
    +'<linearGradient id="bg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#4379d2"/><stop offset="1" stop-color="#8dbcf7"/></linearGradient>'
