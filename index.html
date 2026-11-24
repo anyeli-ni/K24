@@ -115,6 +115,34 @@
     .dot { background:#0f5c6340!important; }
     .dot.on { background:#ff7a6b!important; }
     .dedications #flowers-button { color:#fff!important; background:linear-gradient(135deg,#ff7a6b,#d9559b)!important; box-shadow:0 10px 26px #d9559b55; }
+    /* Ramo de lirios azules */
+    body.flower-mode { background:radial-gradient(ellipse at 50% 38%,#fff 0%,#e8effb 55%,#cddbf0 100%) fixed; }
+    .flowers { justify-content:flex-start; padding-top:clamp(18px,4vw,40px); overflow:hidden }
+    .flowers h2 { margin:0; color:#1f3d7a; font:italic 600 clamp(1.7rem,6.5vw,2.7rem)/1.2 Georgia,'Times New Roman',serif; text-shadow:0 2px 12px #ffffffcc; opacity:0 }
+    .flowers.open h2 { animation:fade 1.4s .3s forwards }
+    .garden { display:block!important; height:auto!important; width:min(100%,520px) }
+    .garden svg { display:block; width:100%; height:auto; max-height:82vh; overflow:visible }
+    .paper { opacity:0; transform:translateY(24px) }
+    .flowers.open .paper { animation:paper 1s ease-out var(--d) forwards }
+    .stem { fill:none; stroke:#3f7a3c; stroke-width:5; stroke-linecap:round; stroke-dasharray:1; stroke-dashoffset:1 }
+    .flowers.open .stem { animation:grow 1.4s ease-out var(--d) forwards }
+    .lf, .bd, .gy, .bow { transform:scale(0) }
+    .flowers.open .lf { animation:pop 1s cubic-bezier(.2,.9,.3,1) var(--d) forwards }
+    .flowers.open .bd { animation:pop .9s cubic-bezier(.3,1.4,.5,1) var(--d) forwards }
+    .flowers.open .gy { animation:pop .6s cubic-bezier(.3,1.6,.5,1) var(--d) forwards }
+    .flowers.open .bow { animation:pop .9s cubic-bezier(.3,1.6,.5,1) var(--d) forwards }
+    .petal { transform:scale(.04); opacity:0 }
+    .flowers.open .petal { animation:bloomp 1.5s cubic-bezier(.2,.9,.25,1.05) forwards; animation-delay:var(--d) }
+    .stamen { opacity:0 } .flowers.open .stamen { animation:fade .8s var(--d) forwards }
+    .sway { transform-box:view-box; transform-origin:430px 740px; animation:sway 6s ease-in-out infinite alternate }
+    @keyframes fade { to { opacity:1 } }
+    @keyframes grow { to { stroke-dashoffset:0 } }
+    @keyframes paper { to { opacity:1; transform:none } }
+    @keyframes pop { to { transform:scale(1) } }
+    @keyframes bloomp { from { transform:scale(.04) rotate(-28deg); opacity:0 } 50% { opacity:1 } to { transform:scale(1) rotate(0); opacity:1 } }
+    @keyframes sway { from { transform:rotate(-1deg) } to { transform:rotate(1deg) } }
+    .sp { position:fixed; z-index:3; width:var(--z); height:var(--z); border-radius:50%; background:#8fb8ff; box-shadow:0 0 9px #a8c8ff; pointer-events:none; opacity:0; animation:rise var(--t) ease-out forwards }
+    @keyframes rise { 0% { opacity:0; transform:translate(0,0) } 20% { opacity:.9 } 100% { opacity:0; transform:translate(var(--dx),-38vh) } }
   </style>
 </head>
 <body>
@@ -147,35 +175,17 @@
     </section>
     <section class="dedications" id="dedications" hidden>
       <h2>Unas palabras para ti </h2>
-      <div class="carousel" id="carousel"><article class="dedication-note"><h3>De Anyeli</h3><p>Espero que hoy recibas todo el cariño y la felicidad que mereces. Que esta nueva vuelta al sol venga acompañada de sueños cumplidos, nuevas aventuras, muchas risas y momentos que te hagan muy feliz. Nunca olvides lo valiosa y especial que eres. Sigue siendo tú, disfrutando de las pequeñas cosas y llenando de alegría a quienes te rodean. ¡Que tengas un lindo dia :D! </p></article>
-      <article class="dedication-note"><h3>De Alonso</h3><p>Escribe aqu&iacute; la dedicatoria de Alonso.</p></article>
-      <article class="dedication-note"><h3>De Susan</h3><p>Feliz cumpleaños hermosa que la pases increíble hoy y siempre 🎂</p></article></div><div class="car-ctrl"><button id="prev" type="button" aria-label="Anterior">&#8249;</button><div id="dots"></div><button id="next" type="button" aria-label="Siguiente">&#8250;</button></div>
+      <div class="carousel" id="carousel"><article class="dedication-note"><h3>De Anyeli</h3><p>Escribe aqu&iacute; la dedicatoria de Anyeli.</p></article>
+      <article class="dedication-note"><h3>De Alonso</h3><p>Kamilaa, que todos tus sueños se cumplan este año y todos los que vienen. Siempre te vamos a apoyar, el team ojito chueco te respalda. No dejes de brillar como persona. ¡Feliz cumpleaños!</p></article>
+      <article class="dedication-note"><h3>De Susan</h3><p>Feliz cumpleaños hermosa que la pases increíble hoy y siempre </p></article></div><div class="car-ctrl"><button id="prev" type="button" aria-label="Anterior">&#8249;</button><div id="dots"></div><button id="next" type="button" aria-label="Siguiente">&#8250;</button></div>
       <button class="primary" id="flowers-button" type="button">Ver tus flores </button>
     </section>
     <section class="flowers" id="flowers" hidden>
-      <h2>Para ti, Kamila </h2>
-      <div class="garden" aria-label="Tres lirios abriendose">
-        <div class="lily"><span class="stem"></span><span class="leaf" style="--leaf-angle:-35deg"></span><div class="bloom"></div></div>
-        <div class="lily"><span class="stem"></span><span class="leaf" style="--leaf-angle:25deg"></span><div class="bloom"></div></div>
-        <div class="lily"><span class="stem"></span><span class="leaf" style="--leaf-angle:-25deg"></span><div class="bloom"></div></div>
-      </div>
+      <h2>Para ti, Kamila</h2>
+      <div class="garden" id="garden" aria-label="Ramo de lirios azules"></div>
     </section>
 <button id="music" type="button" aria-label="Activar m&uacute;sica"><svg class="on" viewBox="0 0 24 24"><path d="M12 3v10.6A4 4 0 1 0 14 17V7h5V3z"/></svg><svg class="off" viewBox="0 0 24 24"><path d="M12 3v10.6A4 4 0 1 0 14 17V7h5V3zM3.3 2 2 3.3l18.7 18.7 1.3-1.3z"/></svg></button>
   </main>
   <script src="js/app.js" defer></script>
-  <script>
-    document.querySelectorAll('.bloom').forEach((bloom) => {
-      for (let i = 0; i < 6; i++) {
-        const petal = document.createElement('span');
-        petal.className = 'petal';
-        petal.style.setProperty('--angle', `${i * 60}deg`);
-        petal.style.setProperty('--delay', `${i * 0.09}s`);
-        bloom.append(petal);
-      }
-      const pollen = document.createElement('span');
-      pollen.className = 'pollen';
-      bloom.append(pollen);
-    });
-  </script>
 </body>
 </html>
