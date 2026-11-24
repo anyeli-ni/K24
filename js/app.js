@@ -23,6 +23,7 @@ function note(f,t,d,type,v){
   g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.0008,t+d);
   o.connect(g).connect(master);o.start(t);o.stop(t+d+.02);
 }
+
 function playLoop(){
   if(!playing)return;
   const t0=ctx.currentTime+.08;
