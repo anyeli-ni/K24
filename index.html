@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#10152f">
   <title>Una sorpresa de cumplea&ntilde;os</title>
   <style>
@@ -14,7 +14,7 @@
     main { position:relative; z-index:1; min-height:100vh; display:grid; place-items:center; padding:30px 18px 80px; text-align:center; }
     .room { width:min(100%,680px); }
     .decoration { position:fixed; z-index:0; visibility:hidden; opacity:0; pointer-events:none; user-select:none; transition:opacity 1s; }
-    .lights-on .decoration { visibility:hidden; opacity:0; }
+    .lights-on .decoration { visibility:visible; opacity:1; }
     .balloon { top:18%; width:clamp(95px,20vw,190px); animation:float 4s ease-in-out infinite; }
     .balloon.left { left:1%; }.balloon.right { right:1%; animation-delay:-2s; }
     .flag { top:0; width:min(34vw,270px); }.flag.left { left:0; }.flag.right { right:0; transform:scaleX(-1); }
@@ -57,7 +57,6 @@
     button:not(.lamp) { padding:13px 20px; border:1px solid #ffffff50; border-radius:999px; color:#fff; background:#ffffff15; font:inherit; font-weight:750; cursor:pointer; transition:transform .15s,background .2s; }
     button:not(.lamp):hover { transform:translateY(-2px); background:#ffffff28; }
     button:focus-visible { outline:3px solid var(--gold); outline-offset:4px; }
-    .primary { border:0; color:#49374f; background:linear-gradient(135deg,#ffe08a,#ff9db8); box-shadow:0 8px 25px #ff9db833; }
     .primary:hover { background:linear-gradient(135deg,#ffe9ab,#ffb2c8); }
     .hint { margin:17px 0 0; color:#c3c0dc; font-size:.9rem; }
     .lights-on .hint { color:#806d87; }
@@ -79,9 +78,43 @@
     @keyframes open-petal { to { transform:translate(-50%,-90%) rotate(var(--angle)) scale(1); } }
     .pollen { position:absolute; z-index:2; top:47%; left:50%; width:15%; aspect-ratio:1; border-radius:50%; background:#f9c944; box-shadow:0 0 16px #ffd56a; transform:translate(-50%,-50%) scale(0); }
     .flowers.open .pollen { animation:appear .5s ease 1.1s forwards; }
-    @media (prefers-reduced-motion:reduce) { .flowers.open .petal { animation-duration:.01ms; } }
     @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; scroll-behavior:auto!important; transition-duration:.01ms!important } }
     @media (max-width:600px) { .balloon { top:8%; width:clamp(70px,19vw,115px); opacity:.78; } .flag { width:38vw; } }
+    #music { position:fixed; z-index:6; right:12px; bottom:calc(12px + env(safe-area-inset-bottom,0px)); width:48px; height:48px; padding:0!important; display:grid; place-items:center; color:#49374f!important; background:#ffffffd9!important; }
+    #music svg { width:24px; height:24px; fill:currentColor }
+    #music .off { display:none } #music.muted .on { display:none } #music.muted .off { display:inline }
+    .confetti { top:-24px }
+    .invitation button { color:#fff!important; background:#111!important; border:1px solid #111!important; box-shadow:0 6px 18px #0006!important; }
+    .invitation button:hover { background:#333!important; }
+    .dedications { overflow:hidden }
+    .carousel { display:flex; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; padding:6px 7%; scrollbar-width:none; -webkit-overflow-scrolling:touch }
+    .carousel::-webkit-scrollbar { display:none }
+    .dedication-note { flex:0 0 86%; margin:0!important; scroll-snap-align:center; min-height:220px; opacity:.45; transform:scale(.94); transition:opacity .4s,transform .4s }
+    .dedication-note.active { opacity:1; transform:none }
+    .dedication-note .r { visibility:hidden }
+    .car-ctrl { display:flex; align-items:center; justify-content:center; gap:16px; margin:16px 0 22px }
+    .car-ctrl button { width:44px; height:44px; padding:0!important; font-size:1.8rem; line-height:1; color:#fff!important; background:#111!important; border:1px solid #ffffff55!important }
+    .car-ctrl button:disabled { opacity:.35; cursor:default; transform:none!important }
+    #dots { display:flex; gap:8px }
+    .dot { width:10px!important; height:10px!important; padding:0!important; border-radius:50%!important; border:0!important; background:#ffffff55!important }
+    .dot.on { background:#ffd36b!important; transform:scale(1.3) }
+    #music.muted { opacity:.85 }
+    body.dedication-mode { color:#3b2a4a; background:linear-gradient(160deg,#fff4e4 0%,#ffdfe3 55%,#dcecff 100%) fixed; }
+    .dedications { padding-top:clamp(28px,7vw,56px); }
+    .dedications h2 { margin:0 0 6px; color:#0f5c63; font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:600; letter-spacing:.01em; }
+    .dedications h2::after { content:''; display:block; width:64px; height:4px; margin:12px auto 18px; border-radius:4px; background:linear-gradient(90deg,#ff7a6b,#1fa6a0,#8a63d2); }
+    .dedication-note { --ac:#ff7a6b; position:relative; overflow:hidden; text-align:left; padding:34px 26px 26px; color:#3b2a4a; border:0; border-radius:26px; background:#fffdf9; box-shadow:0 14px 34px #7a4f6a29; }
+    .dedication-note:nth-child(3n+2) { --ac:#1fa6a0; }
+    .dedication-note:nth-child(3n) { --ac:#8a63d2; }
+    .dedication-note::before { content:''; position:absolute; left:0; right:0; top:0; height:10px; background:var(--ac); }
+    .dedication-note::after { content:'\201C'; position:absolute; right:18px; top:6px; color:var(--ac); opacity:.18; font:700 7rem/1 Georgia,serif; pointer-events:none; }
+    .dedication-note h3 { display:inline-block; margin:0 0 14px; padding:5px 14px; border-radius:999px; color:#fff; background:var(--ac); font-size:.9rem; letter-spacing:.04em; text-transform:uppercase; }
+    .dedication-note p { position:relative; z-index:1; color:#3b2a4a; font:italic 1.2rem/1.75 Georgia,'Times New Roman',serif; }
+    .car-ctrl button { color:#0f5c63!important; background:#fff!important; border:2px solid #0f5c63!important; box-shadow:0 4px 12px #0f5c6322; }
+    .car-ctrl button:disabled { opacity:.35; }
+    .dot { background:#0f5c6340!important; }
+    .dot.on { background:#ff7a6b!important; }
+    .dedications #flowers-button { color:#fff!important; background:linear-gradient(135deg,#ff7a6b,#d9559b)!important; box-shadow:0 10px 26px #d9559b55; }
   </style>
 </head>
 <body>
@@ -94,7 +127,7 @@
       <p class="intro" id="intro" aria-live="polite"></p>
       <button class="lamp" id="lights" type="button" aria-label="Prender la luz" hidden><img src="assets/bulb.svg" alt="Foquito"></button>
       <div class="invitation" id="invitation" hidden>
-        <button class="primary" id="yes" type="button">S&#237; &#128140;</button>
+        <button class="primary" id="yes" type="button">S&#237;</button>
         <button id="no" type="button">No </button>
       </div>
       <button class="envelope-button" id="envelope" type="button" aria-label="Abrir la carta" hidden><img src="assets/sobre-magico.png" alt="Una carta rosa para Kamila; toca para abrirla"></button>
@@ -103,30 +136,31 @@
         <div class="card-content">
           <div class="cake-wrap"><img class="cake" src="assets/cake.svg" alt="Pastel de cumplea&ntilde;os"><img class="party-hat" src="assets/bday-cap.svg" alt=""></div>
           <div class="recipient" id="recipient">&#161;Feliz cumplea&ntilde;os, Kamila!</div>
-          <p class="message">Espero que hoy est&eacute; lleno de sonrisas, abrazos y momentos tan bonitos como t&uacute;. Que todos tus sue&ntilde;os se hagan realidad. &#161;Te quiero mucho! &#10024;</p>
-          <p class="signature">Con cari&ntilde;o, Traposito &#128155;</p>
+          <p class="message">Espero que hoy est&eacute; lleno de sonrisas, abrazos y momentos tan bonitos como t&uacute;. Que todos tus sue&ntilde;os se hagan realidad. &#161;Te quiero mucho! </p>
+          <p class="signature">Con cari&ntilde;o, Traposito </p>
         </div>
       </article>
       <div class="actions">
-        <button class="gift-button" id="party" type="button" hidden><img src="assets/gift.svg" alt=""> Un regalito m&aacute;s</button>
+        <button class="gift-button" id="party" type="button" hidden><img src="assets/gift.svg" alt=""> Unas palabritas</button>
       </div>
       <p class="hint" id="hint" hidden>Haz clic en el foquito para prenderla.</p>
     </section>
     <section class="dedications" id="dedications" hidden>
       <h2>Unas palabras para ti </h2>
-      <article class="dedication-note"><h3>De Anyeli</h3><p>Escribe aqu&iacute; la dedicatoria de Anyeli.</p></article>
+      <div class="carousel" id="carousel"><article class="dedication-note"><h3>De Anyeli</h3><p>Escribe aqu&iacute; la dedicatoria de Anyeli.</p></article>
       <article class="dedication-note"><h3>De Alonso</h3><p>Escribe aqu&iacute; la dedicatoria de Alonso.</p></article>
-      <article class="dedication-note"><h3>De Susan</h3><p>Feliz cumpleaños hermosa que la pases increíble hoy y siempre 🎂</p></article>
-      <button class="primary" id="flowers-button" type="button">Ver tus flores &#127800;</button>
+      <article class="dedication-note"><h3>De Susan</h3><p>Feliz cumpleaños hermosa que la pases increíble hoy y siempre </p></article></div><div class="car-ctrl"><button id="prev" type="button" aria-label="Anterior">&#8249;</button><div id="dots"></div><button id="next" type="button" aria-label="Siguiente">&#8250;</button></div>
+      <button class="primary" id="flowers-button" type="button">Ver tus flores </button>
     </section>
     <section class="flowers" id="flowers" hidden>
-      <h2>Para ti, Kamila &#127800;</h2>
+      <h2>Para ti, Kamila </h2>
       <div class="garden" aria-label="Tres lirios abriendose">
         <div class="lily"><span class="stem"></span><span class="leaf" style="--leaf-angle:-35deg"></span><div class="bloom"></div></div>
         <div class="lily"><span class="stem"></span><span class="leaf" style="--leaf-angle:25deg"></span><div class="bloom"></div></div>
         <div class="lily"><span class="stem"></span><span class="leaf" style="--leaf-angle:-25deg"></span><div class="bloom"></div></div>
       </div>
     </section>
+<button id="music" type="button" aria-label="Activar m&uacute;sica"><svg class="on" viewBox="0 0 24 24"><path d="M12 3v10.6A4 4 0 1 0 14 17V7h5V3z"/></svg><svg class="off" viewBox="0 0 24 24"><path d="M12 3v10.6A4 4 0 1 0 14 17V7h5V3zM3.3 2 2 3.3l18.7 18.7 1.3-1.3z"/></svg></button>
   </main>
   <script src="js/app.js" defer></script>
   <script>
