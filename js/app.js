@@ -13,31 +13,49 @@ setTimeout(()=>{say('\u00bfPuedes prender la luz?');lightsButton.hidden=false;hi
 
 /* Musica alegre sintetizada (sin archivos) */
 let ctx,master,playing=false,loopTimer;
-const BPM=126,STEP=60/BPM/2;
-const BASS=[131,98,110,87];
-const CH=[[262,330,392],[247,294,392],[262,330,440],[262,349,440]];
-const MEL=[523,0,659,523,784,0,659,523, 494,0,587,494,784,0,587,494, 523,0,659,523,880,0,659,523, 523,0,698,523,880,784,698,659];
-function note(f,t,d,type,v){
+const BPM=92,STEP=60/BPM/2;
+/* Vals suave y alegre (compás de 3/4), melodía original: C Am Dm G | C Em F G */
+const BASS=[130.81,110,146.83,98,130.81,82.41,87.31,98];
+const PAH=[[261.63,329.63,392],[261.63,329.63,440],[293.66,349.23,440],[293.66,392,493.88],[261.63,329.63,392],[246.94,329.63,392],[261.63,349.23,440],[293.66,392,493.88]];
+const MEL=[
+ 659.25,0,783.99,0,880,783.99,
+ 659.25,0,0,0,523.25,0,
+ 587.33,0,698.46,0,880,0,
+ 783.99,0,0,0,587.33,0,
+ 659.25,0,783.99,0,1046.5,880,
+ 783.99,0,659.25,0,0,0,
+ 698.46,0,880,0,698.46,587.33,
+ 493.88,0,587.33,0,0,0];
+function initAudio(){
+  ctx=new(window.AudioContext||window.webkitAudioContext)();
+  master=ctx.createGain();
+  const dry=ctx.createGain(),wet=ctx.createGain(),dl=ctx.createDelay(1),fb=ctx.createGain(),lp=ctx.createBiquadFilter();
+  dry.gain.value=.85;wet.gain.value=.3;dl.delayTime.value=.33;fb.gain.value=.35;lp.type='lowpass';lp.frequency.value=2200;
+  master.connect(dry).connect(ctx.destination);
+  master.connect(dl);dl.connect(lp);lp.connect(fb);fb.connect(dl);lp.connect(wet).connect(ctx.destination);
+}
+function note(f,t,d,type,v,a=.01){
   const o=ctx.createOscillator(),g=ctx.createGain();
   o.type=type;o.frequency.value=f;
-  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.01);g.gain.exponentialRampToValueAtTime(.0008,t+d);
-  o.connect(g).connect(master);o.start(t);o.stop(t+d+.02);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+a);
+  g.gain.exponentialRampToValueAtTime(.0008,t+d);
+  o.connect(g).connect(master);o.start(t);o.stop(t+d+.05);
 }
 function playLoop(){
   if(!playing)return;
-  const t0=ctx.currentTime+.08;
-  for(let s=0;s<32;s++){
-    const t=t0+s*STEP,bar=s>>3,st=s&7;
-    if(st%2===0)note(BASS[bar],t,STEP*1.8,'square',.045);
-    if(st%2===1)CH[bar].forEach(f=>note(f,t,STEP*.9,'triangle',.035));
-    if(MEL[s])note(MEL[s],t,STEP*1.6,'triangle',.09);
-    if(st%4===2)note(8000,t,.03,'square',.004);
+  const t0=ctx.currentTime+.1;
+  for(let s=0;s<48;s++){
+    const t=t0+s*STEP,bar=(s/6)|0,st=s%6;
+    if(st===0){note(BASS[bar],t,STEP*4,'triangle',.09);note(BASS[bar]*2,t,STEP*3,'sine',.03)}
+    if(st===2||st===4)PAH[bar].forEach(f=>note(f,t,STEP*2.2,'triangle',.022));
+    if(st===5)note(PAH[bar][2]*2,t,STEP*2.5,'sine',.018);
+    if(MEL[s])note(MEL[s],t,STEP*(st===0||st===4?3.2:2.4),'triangle',.065,.015);
   }
-  loopTimer=setTimeout(playLoop,(32*STEP-.1)*1000);
+  loopTimer=setTimeout(playLoop,(48*STEP-.1)*1000);
 }
 function toggleMusic(on){
   try{
-    if(!ctx){ctx=new(window.AudioContext||window.webkitAudioContext)();master=ctx.createGain();master.connect(ctx.destination)}
+    if(!ctx)initAudio();
     if(ctx.state==='suspended')ctx.resume();
     playing=on;clearTimeout(loopTimer);
     master.gain.cancelScheduledValues(ctx.currentTime);
